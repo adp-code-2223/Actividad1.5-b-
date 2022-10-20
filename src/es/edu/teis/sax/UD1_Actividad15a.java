@@ -4,7 +4,7 @@
  */
 package es.edu.teis.sax;
 
-import es.edu.teis.sax.handler.PersonasHandler;
+import es.edu.teis.sax.handler.PersonasHandlerA;
 import es.edu.teis.sax.model.Persona;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
  *
  * @author mfernandez
  */
-public class UD1_Actividad15 {
+public class UD1_Actividad15a {
 
     /**
      * @param args the command line arguments
@@ -33,7 +33,7 @@ public class UD1_Actividad15 {
             SAXParser saxParser = saxParserFactory.newSAXParser();
 
             File file = new File(Paths.get("src", "docs", "personas.xml").toString());
-            PersonasHandler handler = new PersonasHandler();
+            PersonasHandlerA handler = new PersonasHandlerA();
             saxParser.parse(file, handler);
 
             ArrayList<Persona> personas = handler.getPersonas();

@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author mfernandez
  */
-public class PersonasHandler extends DefaultHandler {
+public class PersonasHandlerB extends DefaultHandler {
 
     private static final String PERSONA_TAG = "persona";
     private static final String PERSONA_EDAD_TAG = "edad";
@@ -23,15 +23,21 @@ public class PersonasHandler extends DefaultHandler {
     private static final String PERSONA_NOMBRE_TAG = "nombre";
     private static final String PERSONA_ATT_ID = "id";
     private static final String PERSONA_ATT_BORRADO = "borrado";
+    
+    private static final String PERSONA_URI_NS_DEFAULT="http://www.personas.com";
+    private static final String PERSONA_URI_NS_ACTIVE= "http://www.personas.com/active";
 
     private Persona persona = null;
     private StringBuilder sb = new StringBuilder();
-    private ArrayList<Persona> personas = new ArrayList<>();
+    private ArrayList<Persona> personasNA = new ArrayList<>();
+    private ArrayList<Persona> personasActivas = new ArrayList<>();
 
-    public ArrayList<Persona> getPersonas() {
-        return personas;
+    public ArrayList<Persona> getPersonasNA() {
+        return personasNA;
     }
-    
+    public ArrayList<Persona> getPersonasActivas() {
+        return personasActivas;
+    }
     
 
     @Override
@@ -42,7 +48,7 @@ public class PersonasHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        switch (qName) {
+        switch (localName) {
             case PERSONA_NOMBRE_TAG:
                 persona.setNombre(sb.toString());
                 break;
@@ -60,10 +66,14 @@ public class PersonasHandler extends DefaultHandler {
                 break;
 
             case PERSONA_TAG:
-                personas.add(persona);
+                if(PERSONA_URI_NS_DEFAULT.equals(uri)){
+                     personasNA.add(persona);
+                }
+                else if(PERSONA_URI_NS_ACTIVE.equals(uri)){
+                    personasActivas.add(persona);
+                }               
                 break;
-            default:
-                throw new AssertionError();
+           
         }
     }
 
@@ -72,7 +82,7 @@ public class PersonasHandler extends DefaultHandler {
         long id;
         String borradoString = null;
 
-        switch (qName) {
+        switch (localName) {
             case PERSONA_TAG:
                 persona = new Persona();
                 id = Long.parseLong(attributes.getValue(PERSONA_ATT_ID));
